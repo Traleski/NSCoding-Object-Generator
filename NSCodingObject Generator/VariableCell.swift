@@ -13,7 +13,7 @@ class VariableCell: UITableViewCell {
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var typeTextField: UITextField!
     @IBOutlet weak var optionalSwitch: UISwitch!
-
+    
     override func awakeFromNib() {
         
         super.awakeFromNib()

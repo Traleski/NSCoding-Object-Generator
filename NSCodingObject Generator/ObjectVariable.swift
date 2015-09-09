@@ -10,11 +10,13 @@ import Foundation
 
 class ObjectVariable {
     
-    var name: String?
-    var type: String?
-    var optional: Bool?
+    var name: String!
+    var type: String!
+    var optional: Bool!
     
-    init(name: String? = nil, type: String? = nil, optional: Bool? = nil) {
+    var isNew: Bool = true
+    
+    init(name: String = "", type: String = "", optional: Bool = true) {
         
         self.name = name
         self.type = type

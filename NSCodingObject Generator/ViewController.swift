@@ -79,6 +79,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     //MARK: TableView
     
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        
+        return 91
+        
+    }
+    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
         return 1
@@ -96,23 +102,33 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let cell = tableView.dequeueReusableCellWithIdentifier("VariableCell", forIndexPath: indexPath) as! VariableCell
         let objectVariable = variables[indexPath.row]
         
-        if cell.nameTextField.text != "" {
-            
-            variables[indexPath.row].name = cell.nameTextField.text
-            
-        } else if let name = objectVariable.name {
-            
-            cell.nameTextField.text = name
-            
-        }
+        if objectVariable.isNew {
         
-        if cell.typeTextField.text != "" {
+            cell.nameTextField.text = ""
+            cell.typeTextField.text = ""
+            objectVariable.isNew = false
             
-            variables[indexPath.row].type = cell.typeTextField.text
+        } else {
             
-        } else if let type = objectVariable.type {
+            if objectVariable.name != "" {
+                
+                cell.nameTextField.text = objectVariable.name
+                
+            } else if cell.nameTextField.text != "" {
+                
+                variables[indexPath.row].name = cell.nameTextField.text
+                
+            }
             
-            cell.typeTextField.text = type
+            if objectVariable.type != "" {
+                
+                cell.typeTextField.text = objectVariable.type
+                
+            } else if cell.typeTextField.text != "" {
+                
+                variables[indexPath.row].type = cell.typeTextField.text
+                
+            }
             
         }
         
@@ -143,7 +159,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 
             } else {
                 
-                varDeclare += "\n"
+                varDeclare += "!\n"
                 
             }
             
@@ -175,22 +191,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
         }
         
-        classText += ")\n\n"
+        classText += ") {\n\n"
         
         for objectVar in variables {
             
-            var varDeclare = "      self." + objectVar.name! + " = " + objectVar.name! + "\n"
+            var varDeclare = "          self." + objectVar.name! + " = " + objectVar.name! + "\n"
             classText += varDeclare
             
         }
         
         classText += "\n" +
-        "   }\n\n"
-        classText += "  convenience required init(coder decoder: NSCoder) {\n\n"
+        "       }\n\n"
+        classText += "      convenience required init(coder decoder: NSCoder) {\n\n"
         
         for objectVar in variables {
             
-            var varDeclare = "      let " + objectVar.name! + " = decoder.decodeObjectForKey(\"" + objectVar.name! + "\") as"
+            var varDeclare = "          let " + objectVar.name! + " = decoder.decodeObjectForKey(\"" + objectVar.name! + "\") as"
             if objectVar.optional! {
                 
                 varDeclare += "? "
@@ -208,7 +224,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         
         classText += "\n" +
-        "       self.init("
+        "           self.init("
         
         index = 0
         for objectVar in variables {
@@ -227,18 +243,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         
         classText += ")\n\n" +
-        "   }\n\n"
-        classText += "  func encodeWithCoder(coder: NSCoder) {\n\n"
+        "       }\n\n"
+        classText += "      func encodeWithCoder(coder: NSCoder) {\n\n"
         
         for objectVar in variables {
             
-            var varDeclare = "      coder.encodeObject(" + objectVar.name! + ", forKey: \"" + objectVar.name! + "\")\n"
+            var varDeclare = "          coder.encodeObject(" + objectVar.name! + ", forKey: \"" + objectVar.name! + "\")\n"
             classText += varDeclare
             
         }
         
         classText += "\n" +
-            "   }\n\n" +
+            "       }\n\n" +
         "}"
         
         codeTextView.text = classText
